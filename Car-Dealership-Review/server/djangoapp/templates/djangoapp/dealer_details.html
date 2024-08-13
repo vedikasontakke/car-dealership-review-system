@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dealership Review</title>
+    {% load static %}
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand text-primary" href="#">Dealership Review</a>
+        </div>
+        <ul class="nav navbar-nav ml-auto">
+          {% if user.is_authenticated %}
+          <a class="nav-item nav-link" href="{% url 'djangoapp:add_review' %}"
+            >Add a Review</a
+          >
+          <li class="nav-item">
+            <div class="rightalign">
+              <div class="dropdown-content">
+                <span class="dropbtn">Hello</span>
+                <span class="mr-3">
+                  {% if user.first_name == "" %} {{ user.username }} {% else %}
+                  {{ user.first_name }} {% endif %}
+                </span>
+                <a
+                  class="text-danger text-decoration-none"
+                  href="{% url 'djangoapp:logout' %}"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <form
+              class="form-inline"
+              action="{% url 'djangoapp:login' %}"
+              method="post"
+            >
+              {% csrf_token %}
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Username"
+                  name="username"
+                />
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="Password"
+                  name="psw"
+                />
+                <button class="btn btn-primary" type="submit">Login</button>
+                <a
+                  class="btn btn-link"
+                  href="{% url 'djangoapp:registration' %}"
+                  >Sign Up</a
+                >
+              </div>
+            </form>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Add reviews as cards -->
+    <div class="card-columns">
+      <!-- for each review in reviews -->
+      {% for review in reviews %}
+      <h2 class="text-left text-primary mt-5">
+        Reviews for {{ review.dealership }}
+      </h2>
+
+      <div class="card">
+        <img
+          class="card-img-left"
+          src="{{ MEDIA_URL }}/emoji/positive.png"
+          alt="Card image cap"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ review.name }}</h5>
+          <p class="card-text">{{ review.id }}</p>
+          <p class="card-text">{{ review.review }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>
